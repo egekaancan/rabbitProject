@@ -52,11 +52,20 @@ public class OrderService {
             orders.add(orderDto);
         });
         orders.forEach(orderDto -> {
-            rabbitTemplate.convertAndSend(OrderMQConfig.ORDER_EXCHANGE, OrderMQConfig.ORDER_ROUTING_KEY, orderDto.getMealName());
-
+            try {
+                String message = objectMapper.writeValueAsString(orderDto);
+                rabbitTemplate.convertAndSend(OrderMQConfig.ORDER_EXCHANGE, OrderMQConfig.ORDER_ROUTING_KEY, message);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         });
         return orders;
     }
-
+    
+    @RabbitListener(queues = OrderStatusMQConfig.ORDER_STATUS_QUEUE)
+    public void listenOrderStatus(String message) throws JsonProcessingException {
+        OrderDto orderDto = objectMapper.readValue(message, OrderDto.class);
+        orderRepository.save(orderMapper.orderDtoToOrder(orderDto));
+    }
 
 }

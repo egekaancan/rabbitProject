@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDto implements Serializable {
+public class OrderDto {
 
     private String mealName;
 
