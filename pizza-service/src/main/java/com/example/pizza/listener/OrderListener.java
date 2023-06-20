@@ -13,19 +13,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class OrderListener {
-
-    private String stockMessage;
 
     private final PizzaService pizzaService;
 
     private final RabbitTemplate rabbitTemplate;
 
     private final ObjectMapper objectMapper;
+
+    private final StockListener stockListener;
 
     @RabbitListener(queues = OrderMQConfig.ORDER_QUEUE)
     public void listenOrder(String message) throws JsonProcessingException {
@@ -34,26 +38,22 @@ public class OrderListener {
         if (pizzaDto.getName() == null) {
             orderDto.setOrderStatus("Meal Not Found");
         } else {
-            sendMessageToStock(convertJsonString(pizzaDto.getIngredients()));
-            if (getStockMessage().equals("no"))
-                orderDto.setOrderStatus("No Stock");
-            else
-                orderDto.setOrderStatus("Confirmed");
+            List<String> stocks = pizzaDto.getIngredients()
+                    .stream()
+                    .map(IngredientDto::getName)
+                    .toList();
+            sendMessageToStock(convertJsonString(stocks));
+            orderDto.setOrderStatus(stockListener.getStockStatus());
         }
         sendResponseToOrder(convertJsonString(orderDto));
     }
 
-    @RabbitListener(queues = PizzaMQConfig.PIZZA_QUEUE)
-    public void listenStock(String message) {
-        stockMessage = message;
+    public void sendMessageToStock(String message) {
+        rabbitTemplate.convertAndSend(PizzaMQConfig.PIZZA_EXCHANGE, PizzaMQConfig.PIZZA_ROUTING_KEY, message);
     }
 
     public void sendResponseToOrder(String response) {
         rabbitTemplate.convertAndSend(OrderStatusMQConfig.ORDER_STATUS_EXCHANGE, OrderStatusMQConfig.ORDER_STATUS_ROUTING_KEY, response);
-    }
-
-    public void sendMessageToStock(String message) {
-        rabbitTemplate.convertAndSend(PizzaMQConfig.PIZZA_EXCHANGE, PizzaMQConfig.PIZZA_ROUTING_KEY, message);
     }
 
     private String convertJsonString(Object object) throws JsonProcessingException {
@@ -64,7 +64,4 @@ public class OrderListener {
         return objectMapper.readValue(message, OrderDto.class);
     }
 
-    private String getStockMessage() {
-        return stockMessage;
-    }
 }

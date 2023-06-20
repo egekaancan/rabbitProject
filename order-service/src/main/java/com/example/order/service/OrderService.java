@@ -64,6 +64,7 @@ public class OrderService {
     
     @RabbitListener(queues = OrderStatusMQConfig.ORDER_STATUS_QUEUE)
     public void listenOrderStatus(String message) throws JsonProcessingException {
+        System.out.println(message);
         OrderDto orderDto = objectMapper.readValue(message, OrderDto.class);
         orderRepository.save(orderMapper.orderDtoToOrder(orderDto));
     }

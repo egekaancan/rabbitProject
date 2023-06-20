@@ -23,28 +23,26 @@ services:
       - PG_DATA=/var/lib/postgresql/data
     volumes:
       - postgresql_data:/var/lib/postgresql/data
-
-  mongodb:
-    hostname: mongodb-server
-    container_name: mongodb-server
-    image: mongo:4.4.17
+  mongo:
+    image: mongo
+    restart: always
     ports:
-      - '27017:27017'
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=rootuser
-      - MONGO_INITDB_ROOT_PASSWORD=rootpass
-      - MONGO_INITDB_DATABASE=stock_db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
 
   mongo-express:
     image: mongo-express
-    container_name: mongo-express
+    restart: always
     ports:
-      - '8085:8085'
+      - "8081:8081"
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
-      - ME_CONFIG_MONGODB_SERVER=mongodb-server
-
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
 
 networks:
@@ -53,3 +51,4 @@ networks:
 
 volumes:
   postgresql_data:
+  mongodb_data:

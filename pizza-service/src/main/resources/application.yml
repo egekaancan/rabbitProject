@@ -16,6 +16,6 @@ spring:
     open-in-view: false
 
 server:
-  port: 8082
+  port: 8083
   error:
     include-message: always

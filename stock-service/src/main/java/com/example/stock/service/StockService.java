@@ -31,7 +31,9 @@ public class StockService {
     }
 
     public StockDto getStockByName(String name) {
-        return stockMapper.stockToStockDto(stockRepository.findStockByName(name));
+        if(stockRepository.findByName(name) == null)
+            return new StockDto();
+        return stockMapper.stockToStockDto(stockRepository.findByName(name));
     }
 
     public StockDto createStock(StockDto stockDto) {
