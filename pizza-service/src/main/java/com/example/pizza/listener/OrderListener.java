@@ -32,7 +32,7 @@ public class OrderListener {
     private final StockListener stockListener;
 
     @RabbitListener(queues = OrderMQConfig.ORDER_QUEUE)
-    public void listenOrder(String message) throws JsonProcessingException {
+    public void listenOrder(String message) throws JsonProcessingException, InterruptedException {
         OrderDto orderDto = convertMessageToOrder(message);
         PizzaDto pizzaDto = pizzaService.getPizzaByName(orderDto.getMealName());
         if (pizzaDto.getName() == null) {
@@ -43,6 +43,7 @@ public class OrderListener {
                     .map(IngredientDto::getName)
                     .toList();
             sendMessageToStock(convertJsonString(stocks));
+            Thread.sleep(3000);
             orderDto.setOrderStatus(stockListener.getStockStatus());
         }
         sendResponseToOrder(convertJsonString(orderDto));

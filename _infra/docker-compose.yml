@@ -33,6 +33,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: stock_db
 
   mongo-express:
     image: mongo-express

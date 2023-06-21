@@ -38,7 +38,7 @@ public class StockService {
 
     public StockDto createStock(StockDto stockDto) {
         Stock stock = stockMapper.stockDtoToStock(stockDto);
-        stockRepository.save(stock);
+        stockRepository.insert(stock);
         return stockMapper.stockToStockDto(stock);
     }
 
