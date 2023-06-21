@@ -50,6 +50,13 @@ public class StockService {
         return stockMapper.stockToStockDto(stock);
     }
 
+    public StockDto decrementStockAmountByName(String name){
+        StockDto stockDto = getStockByName(name);
+        stockDto.setAmount(stockDto.getAmount() - 1);
+        stockRepository.save(stockMapper.stockDtoToStock(stockDto));
+        return stockDto;
+    }
+
     public String deleteStock(String id){
         Optional<Stock> stock = stockRepository.findById(id);
         if(stock.isPresent()) {
@@ -58,4 +65,6 @@ public class StockService {
         }
         return "Wrong id";
     }
+
+
 }

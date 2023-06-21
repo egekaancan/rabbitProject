@@ -9,38 +9,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pizzaApi")
+@RequestMapping("/pizzaapi")
 @RequiredArgsConstructor
 public class PizzaController {
 
     private final PizzaService pizzaService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<PizzaDto>> getAllPizzas() {
         return ResponseEntity.ok(pizzaService.getAllPizzas());
     }
 
-    @GetMapping("/getPizza/id/{id}")
+    @GetMapping("/pizza/id/{id}")
     public ResponseEntity<PizzaDto> getPizzaById(@PathVariable long id) {
         return ResponseEntity.ok(pizzaService.getPizzaById(id));
     }
 
-    @GetMapping("/getPizza/name/{name}")
+    @GetMapping("/pizza/name/{name}")
     public ResponseEntity<PizzaDto> getPizzaByName(@PathVariable String name) {
         return ResponseEntity.ok(pizzaService.getPizzaByName(name));
     }
 
-    @PostMapping("/createPizza")
+    @PostMapping("/pizza")
     public ResponseEntity<PizzaDto> createPizza(@RequestBody PizzaDto pizzaDto) {
         return ResponseEntity.ok(pizzaService.createPizza(pizzaDto));
     }
 
-    @PutMapping("/updatePizza")
+    @PutMapping("/pizza")
     public ResponseEntity<PizzaDto> updatePizza(@RequestBody PizzaDto pizzaDto){
         return ResponseEntity.ok(pizzaService.updatePizza(pizzaDto));
     }
 
-    @DeleteMapping("/deletePizza/{id}")
+    @DeleteMapping("/pizza/{id}")
     public ResponseEntity<String> deletePizza(@PathVariable Long id){
         return ResponseEntity.ok(pizzaService.deletePizza(id));
     }

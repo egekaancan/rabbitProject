@@ -9,38 +9,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/stockApi")
+@RequestMapping("/stockapi")
 @RequiredArgsConstructor
 public class StockController {
 
     private final StockService stockService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<StockDto>> getAllStock() {
         return ResponseEntity.ok(stockService.getAllStock());
     }
 
-    @GetMapping("/getStock/id/{id}")
+    @GetMapping("/stock/id/{id}")
     public ResponseEntity<StockDto> getStockById(@PathVariable String id){
         return ResponseEntity.ok(stockService.getStockById(id));
     }
 
-    @GetMapping("/getStock/name/{name}")
+    @GetMapping("/stock/name/{name}")
     public ResponseEntity<StockDto> getStockByName(@PathVariable String name) {
         return ResponseEntity.ok(stockService.getStockByName(name));
     }
 
-    @PostMapping("/createStock")
+    @PostMapping("/stock")
     public ResponseEntity<StockDto> createStock(@RequestBody StockDto stockDto) {
         return ResponseEntity.ok(stockService.createStock(stockDto));
     }
 
-    @PutMapping("/updateStock")
+    @PutMapping("/stock")
     public ResponseEntity<StockDto> updateStock(@RequestBody StockDto stockDto) {
         return ResponseEntity.ok(stockService.updateStock(stockDto));
     }
 
-    @DeleteMapping("/deleteStock/{id}")
+    @DeleteMapping("/stock/{id}")
     public ResponseEntity<String> deleteStock(@PathVariable String id) {
         return ResponseEntity.ok(stockService.deleteStock(id));
     }

@@ -24,7 +24,6 @@ public class PizzaListener {
     @RabbitListener(queues = PizzaMQConfig.PIZZA_QUEUE)
     public void getIngredients(String message) throws JsonProcessingException {
         List<String> stocks = objectMapper.readValue(message, List.class);
-        String response = "";
         List<Integer> stockAmountList = stocks
                 .stream()
                 .map(stock -> {
@@ -39,11 +38,11 @@ public class PizzaListener {
                 })
                 .toList();
         if (stockAmountList.contains(0)) {
-            response = "No Stock";
-            sendMessageToPizza(response);
-        } else {
-            response = "Confirmed";
-            sendMessageToPizza(response);
+            sendMessageToPizza("No Stock");
+        }
+        else {
+            stocks.forEach(stockService::decrementStockAmountByName);
+            sendMessageToPizza("Confirmed");
         }
     }
 

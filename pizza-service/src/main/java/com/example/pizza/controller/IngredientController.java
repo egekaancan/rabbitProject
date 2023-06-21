@@ -10,38 +10,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ingredientApi")
+@RequestMapping("/ingredientapi")
 @RequiredArgsConstructor
 public class IngredientController {
 
     private final IngredientService ingredientService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<IngredientDto>> getAllIngredients() {
         return ResponseEntity.ok(ingredientService.getAllIngredients());
     }
 
-    @GetMapping("/getIngredient/id/{id}")
+    @GetMapping("/ingredient/id/{id}")
     public ResponseEntity<IngredientDto> getIngredientById(@PathVariable long id) {
         return ResponseEntity.ok(ingredientService.getIngredientById(id));
     }
 
-    @GetMapping("/getIngredient/name/{name}")
+    @GetMapping("/ingredient/name/{name}")
     public ResponseEntity<IngredientDto> getIngredientByName(@PathVariable String name) {
         return ResponseEntity.ok(ingredientService.getIngredientByName(name));
     }
 
-    @PostMapping("/createIngredient")
+    @PostMapping("/ingredient")
     public ResponseEntity<IngredientDto> createIngredient(@RequestBody IngredientDto ingredientDto) {
         return ResponseEntity.ok(ingredientService.createIngredient(ingredientDto));
     }
 
-    @PutMapping("/updateIngredient")
+    @PutMapping("/ingredient")
     public ResponseEntity<IngredientDto> updateIngredient(@RequestBody IngredientDto ingredientDto){
         return ResponseEntity.ok(ingredientService.updateIngredient(ingredientDto));
     }
 
-    @DeleteMapping("/deleteIngredient/{id}")
+    @DeleteMapping("/ingredient/{id}")
     public ResponseEntity<String> deleteIngredient(@PathVariable Long id){
         return ResponseEntity.ok(ingredientService.deleteIngredient(id));
     }
